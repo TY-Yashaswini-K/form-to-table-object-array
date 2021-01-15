@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="col-md-4 offset-md-4 mt-4">
+        <form name="employeeForm" onsubmit="onSubmit()">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" required minlength="3" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" required minlength="8" class="form-control">
+            </div>
+            <button class="btn btn-pimary float right">
+                Submit
+            </button>
+        </form>
+    </div>
+    <div class="container mt-5">
+        <table class="table table-border table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Index</th>
+                    <th>Name</th>
+                    <th>Email</th>
+
+                </tr>
+            </thead>
+            <tbody id="table-body">
+
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+<script>
+    (function () {
+        //check weather employees array is available in local storage
+        if (Array.isArray(getEmployees())) {
+            displayEmployees();
+        } else {
+            //if employees array is not avilable set it to empty array
+            setEmployees([]);
+        }
+    })();
+
+
+    //getter  function to get employees array from local storage
+    function getEmployees() {
+        return JSON.parse(localStorage.getItem('employees'));
+    }
+
+    //settter function to store employees array in local storage
+    function setEmployees(employees) {
+        localStorage.setItem('employees', JSON.stringify(employees));
+    }
+
+    function displayEmployees() {
+        var employeeData = getEmployees();
+        var tableBody = "";
+        employeeData.forEach(function (employee, index) {
+            tableBody += `
+        <tr>
+        <td>${index + 1}</td>
+        <td>${employee.name}</td>
+        <td>${employee.email}</td>
+        </tr>
+        `;
+        });
+        document.getElementById('table-body').innerHTML = tableBody;
+    }
+
+    function onSubmit() {
+        var form = document.employeeForm;
+        var employee = {
+            name: form.name.value,
+            email: form.email.value
+        }
+        console.log(employee);
+        var employeeData = getEmployees();
+        employeeData.push(employee);
+        setEmployees(employeeData);
+        displayEmployees();
+    }
+
+</script>
+</body>
+
+</html>
